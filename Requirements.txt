@@ -1,0 +1,7 @@
+osrparse==3.0.0
+tensorflow=2.0.0
+keras==2.3.1
+argparse==1.4.0
+requests==2.22.0
+Pandas==0.25.3
+sklearn==0.0
