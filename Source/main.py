@@ -23,14 +23,24 @@ def create_arg_parser():
                     help="Assume the replay is legit, for training only")
     parser.add_argument("-train", required=False, action="store_true", default=False,
                     help="Marks the provided replays 'to be used to train'. Evaluates if omitted")
+
+    parser.add_argument("-relax", required=False, action="store_false",
+                    help="Only use the relax model. Defaults to using all models, if -aim or -relax are not given.")
+    parser.add_argument("-aim", required=False, action="store_false",
+                    help="Only use the aim model. Defaults to using all models, if -aim or -relax are not given.")
+    
     return parser
 
 arg_parser = create_arg_parser()
 parsed_args = arg_parser.parse_args(sys.argv[1:])
 
-if not os.path.exists("aim.model") or not os.path.exists("relax.model"):
+if not os.path.exists("aim.model.h5") or not os.path.exists("relax.model.h5"):
     print("Models do not exist. Please run resetModel.py to re-create them.")
     exit(1)
+
+if parsed_args.verbose:
+    print("Using Aim Model: {}".format(parsed_args.aim))
+    print("Using Relax Model: {}".format(parsed_args.relax))
 
 
 # Set Constant Path
@@ -160,10 +170,12 @@ def df_to_dataset(dataframe, shuffle=False, batch_size=128):
         ds = ds.batch(batch_size)
     return ds
 
-aim_model = keras.models.load_model('aim.model')
-print("Loaded Aim Model: ")
-aim_model.summary()
+if parsed_args.aim:
+    aim_model = tensorflow.keras.models.load_model('aim.model.h5')
+    print("Loaded Aim Model: ")
+    aim_model.summary()
 
-relax_model = keras.models.load_model('relax.model')
-print("Loaded Relax Model: ")
-relax_model.summary()
+if parsed_args.relax:
+    relax_model = tensorflow.keras.models.load_model('relax.model.h5')
+    print("Loaded Relax Model: ")
+    relax_model.summary()
