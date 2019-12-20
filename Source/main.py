@@ -24,9 +24,9 @@ def create_arg_parser():
     parser.add_argument("-train", required=False, action="store_true", default=False,
                     help="Marks the provided replays 'to be used to train'. Evaluates if omitted")
 
-    parser.add_argument("-relax", required=False, action="store_false",
+    parser.add_argument("-relax", required=False, action="store_true", default=False,
                     help="Only use the relax model. Defaults to using all models, if -aim or -relax are not given.")
-    parser.add_argument("-aim", required=False, action="store_false",
+    parser.add_argument("-aim", required=False, action="store_true", default=False,
                     help="Only use the aim model. Defaults to using all models, if -aim or -relax are not given.")
     
     return parser
@@ -37,6 +37,10 @@ parsed_args = arg_parser.parse_args(sys.argv[1:])
 if not os.path.exists("aim.model.h5") or not os.path.exists("relax.model.h5"):
     print("Models do not exist. Please run resetModel.py to re-create them.")
     exit(1)
+
+if not parsed_args.aim and not parsed_args.relax:
+    parsed_args.aim = True
+    parsed_args.relax = True
 
 if parsed_args.verbose:
     print("Using Aim Model: {}".format(parsed_args.aim))
