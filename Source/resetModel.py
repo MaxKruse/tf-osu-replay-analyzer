@@ -3,6 +3,8 @@ import keras
 
 import os
 
+def calc_neurons(current, final_output):
+	return int(current * (2 / 3) + (final_output * 2) + 32)
 
 print("You are about to reset the models used for antiCheat detection.")
 
@@ -12,11 +14,17 @@ if validate == 'delete_relax.model':
 		os.remove('relax.model.h5')
 	model = tensorflow.keras.Sequential()
 
-	model.add(tensorflow.keras.layers.Input((500,), name="positions")) # 500 Inputs are, worst case, samples with 10 seconds. Usually its samples for ~6-7 seconds though.
-	model.add(tensorflow.keras.layers.Dense(40, activation='relu', name="low_complex")) # single complexity, not very good
-	model.add(tensorflow.keras.layers.Dense(80, activation='relu', name="mid_complex")) # double complexity, enough for basic understanding
-	model.add(tensorflow.keras.layers.Dense(160, activation='relu', name="high_complex")) # tripple complexity, enough for complex understanding
-	model.add(tensorflow.keras.layers.Dense(320, activation='relu', name="all_complex")) # quad complexity, enough for everything
+	neurons = 500
+
+	model.add(tensorflow.keras.layers.Input((neurons,), name="positions")) # 500 Inputs are, worst case, samples with 10 seconds. Usually its samples for ~6-7 seconds though.
+	neurons = calc_neurons(neurons, 2)
+	model.add(tensorflow.keras.layers.Dense(neurons, activation='relu', name="low_complex")) # single complexity, not very good
+	neurons = calc_neurons(neurons, 2)
+	model.add(tensorflow.keras.layers.Dense(neurons, activation='relu', name="mid_complex")) # double complexity, enough for basic understanding
+	neurons = calc_neurons(neurons, 2)
+	model.add(tensorflow.keras.layers.Dense(neurons, activation='relu', name="high_complex")) # tripple complexity, enough for complex understanding
+	neurons = calc_neurons(neurons, 2)
+	model.add(tensorflow.keras.layers.Dense(neurons, activation='relu', name="all_complex")) # quad complexity, enough for everything
 	model.add(tensorflow.keras.layers.Dense(units=2, activation='softmax', name="result")) # Output, softmax to go from 0.0 to 1.0
 
 	model.compile(optimizer='adam',
@@ -35,11 +43,17 @@ if validate == 'delete_aim.model':
 		os.remove('aim.model.h5')
 	model = tensorflow.keras.Sequential()
 
+	neurons = 500 * 2
+
 	model.add(tensorflow.keras.layers.Input((500,2), name="positions")) # 500 Inputs are, worst case, samples with 10 seconds. Usually its samples for ~6-7 seconds though. x2 for x + y
-	model.add(tensorflow.keras.layers.Dense(40, activation='relu', name="low_complex")) # single complexity, not very good
-	model.add(tensorflow.keras.layers.Dense(80, activation='relu', name="mid_complex")) # double complexity, enough for basic understanding
-	model.add(tensorflow.keras.layers.Dense(160, activation='relu', name="high_complex")) # tripple complexity, enough for complex understanding
-	model.add(tensorflow.keras.layers.Dense(320, activation='relu', name="all_complex")) # quad complexity, enough for everything
+	neurons = calc_neurons(neurons, 2)
+	model.add(tensorflow.keras.layers.Dense(neurons, activation='relu', name="low_complex")) # single complexity, not very good
+	neurons = calc_neurons(neurons, 2)
+	model.add(tensorflow.keras.layers.Dense(neurons, activation='relu', name="mid_complex")) # double complexity, enough for basic understanding
+	neurons = calc_neurons(neurons, 2)
+	model.add(tensorflow.keras.layers.Dense(neurons, activation='relu', name="high_complex")) # tripple complexity, enough for complex understanding
+	neurons = calc_neurons(neurons, 2)
+	model.add(tensorflow.keras.layers.Dense(neurons, activation='relu', name="all_complex")) # quad complexity, enough for everything
 	model.add(tensorflow.keras.layers.Dense(units=2, activation='softmax', name="result")) # Output, softmax to go from 0.0 to 1.0
 
 	model.compile(optimizer='adam',
