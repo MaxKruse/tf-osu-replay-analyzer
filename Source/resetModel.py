@@ -6,7 +6,7 @@ import os
 
 print("You are about to reset the models used for antiCheat detection.")
 
-validate = input("To reset relax.model, type 'delete_relax.model'")
+validate = input("To reset relax.model, type 'delete_relax.model': ").strip()
 if validate is 'delete_relax.model':
 	if os.path.exists("relax.model"):
 		os.remove('relax.model')
@@ -24,7 +24,7 @@ if validate is 'delete_relax.model':
 else:
 	print("Skipping relax.model")
 
-validate = input("To reset aim.model, type 'delete_aim.model'")
+validate = input("To reset aim.model, type 'delete_aim.model': ").strip()
 if validate is 'delete_aim.model':
 	if os.path.exists("aim.model"):
 		os.remove('aim.model')
